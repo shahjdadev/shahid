@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/accest/logo.png">
+  <title>Email Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class="bg-cyan-100 font-[Poppins,Inter,Roboto,sans-serif] min-h-screen p-4">
+  
+  <div class="bg-[#f0f0f0] rounded-lg text-center mb-2 py-4">
+    <p>© 2023 <a href="https://shahidtatkal.github.io" class="text-[#0288D1] underline">Shahid Tatkal</a>. All rights reserved.</p>
+  </div>
+  
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4 text-center">Email Formatter Tool</h2>
+    
+    <div class="flex gap-2 mb-4">
+      <textarea id="inputData" rows="4" placeholder="Paste your row data here..." class="flex-grow p-2 border rounded-md text-sm"></textarea>
+      <button id="pasteBtn" class="px-3 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300">Paste</button>
+    </div>
+    
+    <button onclick="generateEmail()" class="w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 mb-4">Generate</button>
+    
+    <div id="outputSection" class="hidden space-y-4">
+      <div>
+        <label class="block text-sm font-semibold mb-1">Email:</label>
+        <div id="userEmail" class="bg-gray-100 p-2 rounded-md text-sm"></div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold mb-1">Subject:</label>
+        <div id="emailSubject" class="bg-gray-100 p-2 rounded-md text-sm">Payment Received For Shahid Tatkal</div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-semibold mb-1">Live Preview:</label>
+        <iframe id="previewFrame" class="w-full border rounded-md" style="height:200px;"></iframe>
+      </div>
+      
+      <div class="flex justify-between gap-2 mt-4">
+        <button onclick="triggerUpdate()" class="w-1/2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Send Plain Email</button>
+        <button onclick="sendHTMLEmail()" class="w-1/2 bg-green-600 text-white py-2 rounded hover:bg-green-700">Send HTML Email</button>
+      </div>
+      <p id="status"></p>
+    </div>
+  </div>
+  
+  <script>
+    async function pasteClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        const input = document.getElementById("inputData");
+        input.value = "";
+        input.value = text;
+      } catch (err) {
+        alert("Clipboard access failed.");
+      }
+    }
+    
+    document.getElementById("pasteBtn").addEventListener("click", pasteClipboard);
+    
+    function generateEmail() {
+      const row = document.getElementById("inputData").value.trim();
+      if (!row) return;
+      
+      const [user_name, password, expiry_date, user_email, utr, plan_amount] = row.split(/\t/);
+      let days = "";
+      if (plan_amount == 199) days = "7 days";
+      else if (plan_amount == 49) days = "1 day";
+      else if (plan_amount == 549) days = "30 days";
+      else if (plan_amount == 4999) days = "LIFE TIME";
+      
+      const subject = "Payment Received For Shahid Tatkal";
+      
+    
+      
+      const htmlTemplate = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0; padding:0; background-color:#E0F7FA; font-family:Poppins,Inter,Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:375px; margin:10px auto; background-color:#E0F7FA; box-sizing: border-box; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+    <tr>
+      <td align="center" style="padding:30px 20px 10px;">
+        <img src="https://shahidtatkal.github.io/accest/logo.png" alt="Logo" width="100" height="100" style="display:block; margin:0 auto;" />
+        <div style="font-size:22px; font-weight:600; color:#00796B; margin-top:10px;">
+          Shahid Tatkal: A tickets booking tool
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:20px 30px 10px; font-size:16px; color:#333;">
+        <p style="margin-bottom:16px;">We received your payment of <strong style="color:#00796B;">${plan_amount}rs</strong> for the Plan of <strong style="color:#00796B;">${days}</strong>.</p>
+        <p style="margin:0; line-height:1.6;">
+          <strong>Username:</strong> <span style="color:#00796B;">${user_name}</span><br/>
+          <strong>Password:</strong> <span style="color:#00796B;">${password}</span><br/>
+          <strong>Plan Expiry:</strong> <span style="color:#00796B;">${expiry_date}</span>
+        </p>
+        <p style="margin-top:24px;">It will activated under 5 Mints. <br>Thank you for your support.</p>
+      </td>
+    </tr>
+    <tr>
+      <td>      
+  <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+    <div style="display: flex; gap: 10px; padding: 5px 15px; background-color: #B2EBF2; border-radius: 50px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); align-items: center;">
+      <a href="https://shahidtatkal.github.io" style="display: inline-block; transition: transform 0.3s ease;">
+        <img src="https://shahidtatkal.github.io/accest/Web-contact.png" alt="web" style="height: 30px;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      </a>
+      <a href="https://youtu.be/AGi_DiUJiBQ?si=9RoD97vhWtw3zWXR" style="display: inline-block; transition: transform 0.3s ease;">
+        <img src="https://shahidtatkal.github.io/accest/Youtube-contact.png" alt="youtube" style="height: 30px;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      </a>
+      <a href="https://t.me/shahidtatkal" style="display: inline-block; transition: transform 0.3s ease;">
+        <img src="https://shahidtatkal.github.io/accest/Telegram-contact.png" alt="telegram" style="height: 30px;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      </a>
+      <a href="mailto:shahidadev@hotmail.com?subject=From%20ContactBar" style="display: inline-block; transition: transform 0.3s ease;">
+        <img src="https://shahidtatkal.github.io/accest/email-contact.png" alt="email" style="height: 30px;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      </a>
+    </div>
+  </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background:#B2EBF2; padding:15px; text-align:center; font-size:13px; color:#555;">
+        © 2025 Shahid Tatkal. All rights reserved.
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+      
+      document.getElementById("outputSection").classList.remove("hidden");
+      document.getElementById("userEmail").textContent = user_email;
+  
+      document.getElementById("previewFrame").srcdoc = htmlTemplate;
+    }
+    
+
+    
+    function sendHTMLEmail() {
+      const email = document.getElementById("userEmail").textContent;
+      const subject = document.getElementById("emailSubject").textContent;
+      const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}`;
+      window.location.href = mailtoLink;
+    }
+    
+    function triggerUpdate() {
+  const statusEl = document.getElementById("status");
+  statusEl.innerHTML = "Updating...";
+  
+  fetch("https://script.google.com/macros/s/AKfycbwVcYqqDwhc713vtQSNeivmoYnwYX1rVgxUkpV8No1tKmJ05Xtfk6r2UQPDi5RlEGbKNw/exec")
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        statusEl.innerHTML = `✅ Updated: <a href="${data.commitUrl}" target="_blank">View Commit</a>`;
+      } else {
+        statusEl.innerHTML = "❌ Failed: " + data.message;
+      }
+    })
+    .catch(err => {
+      statusEl.innerHTML = "❌ Error connecting to server";
+    });
+}
+  </script>
+</body>
+
+</html>

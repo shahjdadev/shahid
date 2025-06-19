@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Page</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #iframeContainer {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      display: none; /* Hide initially */
+    }
+
+    #loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+    <!-- Buy Subscription Section -->
+<!--   src="https://script.google.com/macros/s/AKfycbzY5f-d2Wo9vpLMFWSfOKKCNcVV_3fr5lVyFB6TGuqPJqBxdTDjDQpxt6OhOGwfP4e2qg/exec?UPIshahid" -->
+<!--   src="https://script.google.com/macros/s/AKfycbx469SqWBmOu_P0JduFEdIQf8Paeo2QM4AEOpvcTWv51n5WAF-069pC7YL4ciJxko9N/exec?UPI" -->
+<!--   src="https://script.google.com/macros/s/AKfycbwXKIaqshwg5qDtLDOGD8qr3M299Eb6YXpHbyoB1QApaTjQRBxqjDbA8hvKOw4Pc6nY/exec?AmazonPay" -->
+  <div id="iframeContainer">
+    <div id="loader">Loading Payment Page...</div>
+
+    <iframe id="PaymentURLframe"></iframe>
+  </div>
+
+  <script>
+    const iframe = document.getElementById("PaymentURLframe");
+    const loader = document.getElementById("loader");
+
+    const firstURL = "https://script.google.com/macros/s/AKfycbzY5f-d2Wo9vpLMFWSfOKKCNcVV_3fr5lVyFB6TGuqPJqBxdTDjDQpxt6OhOGwfP4e2qg/exec?UPIshahid";
+    const secondURL = "https://script.google.com/macros/s/AKfycbwXKIaqshwg5qDtLDOGD8qr3M299Eb6YXpHbyoB1QApaTjQRBxqjDbA8hvKOw4Pc6nY/exec?AmazonPay";
+
+    const now = new Date();
+    const hours = now.getHours();
+
+    // Time check
+    const selectedURL = (hours >= 7 && hours < 11) ? firstURL : secondURL;
+
+    // Set iframe src
+    iframe.src = selectedURL;
+
+    // Wait for iframe to load
+    iframe.onload = () => {
+      loader.style.display = "none";      // Hide loader
+      iframe.style.display = "block";     // Show iframe
+    };
+  </script>
+</body>
+</html>
